@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from forms import RegistrationForm, LoginForm
@@ -43,11 +43,19 @@ def playlists_show(movie_id):
 def register():
     """Takes user to regestration page"""
     form = RegistrationForm()
-    # return f'holla'
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('index'))
     return render_template('register.html', form=form)
 
-@app.route('/login')
+@app.route('/login', methods = ['GET', 'POST'])
 def login():
     """Takes user to regestration page"""
     form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'red@gmail.com' and form.password.data == 'password':
+            flash(f'You have been logged in!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash(f'Log in unsuccessful. Please Check password and user name', 'danger')
     return render_template('login.html', form=form)
