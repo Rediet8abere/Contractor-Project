@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from forms import RegistrationForm, LoginForm
+
 
 client = MongoClient()
 db = client.MoviesF
@@ -18,6 +20,8 @@ movies.insert_many(movie)
 
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = '7ab8d9b149706a3cbec1a4b2af427e06c9db4c7449b6d042'
+
 @app.route('/')
 def index():
     """Return homepage."""
@@ -28,14 +32,15 @@ def movies_index():
     """Show all movies."""
     return render_template('movies_index.html', movies=movies.find())
 
-# @app.route('/movies/storage')
-# def playlists_new():
-#     """Movie storage."""
-#     return render_template('movies_storage.html')
-
 @app.route('/movies/<movie_id>')
 def playlists_show(movie_id):
     """Show a single movie."""
     movie = movies.find_one({'_id': ObjectId(movie_id)})
     # return f'movie id {movie_id} /n {movie}'
     return render_template('movies_show.html', movie=movie)
+
+@app.route('/register')
+def register():
+    """Takes user to regestration page"""
+    form = RegistrationForm
+    return render_template('register.html', title= 'Register', form=form)    
