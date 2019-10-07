@@ -39,8 +39,15 @@ def playlists_show(movie_id):
     # return f'movie id {movie_id} /n {movie}'
     return render_template('movies_show.html', movie=movie)
 
-@app.route('/register')
+@app.route('/register', methods = ['GET', 'POST'])
 def register():
     """Takes user to regestration page"""
-    form = RegistrationForm
-    return render_template('register.html', title= 'Register', form=form)    
+    form = RegistrationForm()
+    # return f'holla'
+    return render_template('register.html', form=form)
+
+@app.route('/login')
+def login():
+    """Takes user to regestration page"""
+    form = LoginForm()
+    return render_template('login.html', form=form)
