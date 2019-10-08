@@ -3,16 +3,22 @@
 
 {% block content %}
 <h1>Movies</h1>
-
-<!-- <a href='/movies/new'>MOVIE LIST</a> -->
-<h2>Movie Storage</h2>
-{% for movie in movies %}
-    <h2><a href='/movies/{{ movie._id }}'>{{ movie.title }}</a></h2>
-    <small>{{ movie.title }}</small>
-    <small>{{ movie.description }}</small>
-    <small>{{ movie.realse_date }}</small>
-    <small>{{ movie.time }}</small>
-    <small>{{ movie.image }}</small>
-    <img src='{{ movie.image }}' width="500" height="333"> -->
-{% endfor %}
+    <div class="row">
+        <div class="col">
+        {% for movie in movies %}
+            <h2><a href='/movies/{{ movie._id }}'>{{ movie.title }}</a></h2>
+            <small>{{ movie.title }}</small>
+            <small>{{ movie.description }}</small>
+            <small>{{ movie.realse_date }}</small>
+            <small>{{ movie.time }}</small>
+                <small> Hello world! {{ movie.image }} Hello World! </small>
+            <img src='{{ movie.image }}' width="500" height="333">
+        {% endfor %}
+        </div>
+    <!-- <div class="col">Column</div>
+    <div class="w-100"></div>
+    <div class="col">Column</div>
+    <div class="col">Column</div> -->
+  </div>
+</div>
 {% endblock %}
