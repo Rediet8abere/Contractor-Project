@@ -29,6 +29,9 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '7ab8d9b149706a3cbec1a4b2af427e06c9db4c7449b6d042'
 
+
+
+
 @app.route('/')
 def index():
     """Return homepage."""
@@ -60,26 +63,30 @@ def register():
     """Takes user to regestration page"""
     # client sends flask a POST request (clients sends over data)
     class user(object):
-        def __init__(self, username, password):
+        def __init__(self, username, password, email):
             self.username = username
             self.password = password
+            self.email = email
 
         def json(self):
             return {
                 'username': self.username,
-                'password': self.password
+                'password': self.password,
+                'email': self.email
                 }
+
     if request.method == 'POST':
         form = RegistrationForm()
         if form.validate_on_submit():
             if users.find_one({"username": form.username.data}):
                 flash(f'That account already exists')
+                return redirect(url_for('index'))
             else:
-                current_user = users.insert_one(user(form.username.data, form.password.data).json())
+                current_user = users.insert_one(user(form.username.data, form.password.data, form.email.data).json())
                 return redirect(url_for('index'))
         else:
             flash(f'Incorrect crednetials')
-            return render_template('register.html')
+            return render_template('register.html', form=form)
 
     if request.method == 'GET':
         form = RegistrationForm()
