@@ -29,7 +29,18 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '7ab8d9b149706a3cbec1a4b2af427e06c9db4c7449b6d042'
 
+class user(object):
+    def __init__(self, username, password, email):
+        self.username = username
+        self.password = password
+        self.email = email
 
+    def json(self):
+        return {
+            'username': self.username,
+            'password': self.password,
+            'email': self.email
+            }
 
 
 @app.route('/')
@@ -62,19 +73,6 @@ def form():
 def register():
     """Takes user to regestration page"""
     # client sends flask a POST request (clients sends over data)
-    class user(object):
-        def __init__(self, username, password, email):
-            self.username = username
-            self.password = password
-            self.email = email
-
-        def json(self):
-            return {
-                'username': self.username,
-                'password': self.password,
-                'email': self.email
-                }
-
     if request.method == 'POST':
         form = RegistrationForm()
         if form.validate_on_submit():
@@ -92,15 +90,33 @@ def register():
         form = RegistrationForm()
         return render_template('register.html', form=form)
 
-
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     """Takes user to regestration page"""
     form = LoginForm()
-    if form.validate_on_submit():
-        if form.email.data == 'red@gmail.com' and form.password.data == 'password':
-            flash(f'You have been logged in!', 'success')
-            return redirect(url_for('index'))
-        else:
-            flash(f'Log in unsuccessful. Please Check password and user name', 'danger')
+    if request.method == 'POST':
+        print("getting ready to check")
+        if form.validate_on_submit():
+            print("valid for submit")
+            if users.find_one({"email": form.email.data}):
+                if (form.email.data == users.find_one({"email": form.email.data})["email"]) and (form.password.data == users.find_one({"email": form.email.data})["password"]):
+                    print("email valid")
+                    flash(f'You have been logged in!', 'success')
+                    return redirect(url_for('index'))
+            else:
+                print("wrong email")
+                flash(f'Log in unsuccessful. Please Check password and email', 'danger')
+                # return redirect(url_for('index'))
     return render_template('login.html', form=form)
+
+    if request.method == 'GET':
+        return render_template('login.html', form=form)
+
+    # form = LoginForm()
+    # if form.validate_on_submit():
+    #     if form.email.data == 'red@gmail.com' and form.password.data == 'password':
+    #         flash(f'You have been logged in!', 'success')
+    #         return redirect(url_for('index'))
+    #     else:
+    #         flash(f'Log in unsuccessful. Please Check password and user name', 'danger')
+    # return render_template('login.html', form=form)
