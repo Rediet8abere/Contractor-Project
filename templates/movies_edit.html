@@ -4,11 +4,11 @@
 {% block content %}
 <form method='POST' action='/movies/<movie_id>'>
     <fieldset>
-        <legend>Edit MOvie Name</legend>
+        <legend>Edit Movie Name</legend>
         <!-- TITLE -->
         <p>
-            <label for='movie-title'>Title</label><br>
-            <input id='movie-title' type='text' name='title' value='{{ movie.title }}'/>
+            <label for='title'>Title</label><br>
+            <input id='title' type='text' name='title' value='{{ movie.title }}'/>
         </p>
 
         <!-- DESCRIPTION -->
@@ -19,9 +19,9 @@
 
         <!-- VIDEO LINKS -->
         <p>
-            <label for='movies'>Movies</label><br>
+            <label for='link'>Movies</label><br>
             <p>Add videos in the form of 'https://youtube.com/embed/KEY'. Separate with a newline.</p>
-            <textarea id='movies' name='link' rows='10'>{{ "\n".join(movie.link) }}</textarea>
+            <textarea id='link' name='link' rows='10'>{{ "\n".join(movie.link) }}</textarea>
         </p>
 
         <p>
