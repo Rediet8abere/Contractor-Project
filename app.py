@@ -12,9 +12,6 @@ movies = db.movies
 users = db.users
 
 movie = [
-{ 'title': 'aladdin', 'description':'Aladdin 2019 Full Movie Subtitle Indonesia aladin 2019 sub indonesia',
-    'link':"https://www.youtube.com/embed/jYMP6WUlYoo",
-    'image':"https://cdn3-www.comingsoon.net/assets/uploads/2019/07/Aladdin.jpg"},
 { 'title': 'Alvin and the Chipmunks 3', 'description':'Alvin and the Chipmunks 3 Full Movie English - Alvin Movies For Kid 2017',
       'link':"https://www.youtube.com/embed/Dbln5lECx2o",
       'image':"https://images-na.ssl-images-amazon.com/images/I/91isIKhEZBL._SX342_.jpg"},
@@ -55,11 +52,32 @@ def movies_index():
     """Show all movies."""
     return render_template('movies_index.html', movies=movies.find())
 
+
+
 @app.route('/movies/<movie_id>')
 def playlists_show(movie_id):
     """Show a single movie."""
     movie = movies.find_one({'_id': ObjectId(movie_id)})
     return render_template('movies_show.html', movie=movie)
+
+@app.route('/movies/<movie_id>', methods=['POST'])
+def movies_update(movie_id):
+    """Submit an edited movie."""
+    movie = movies.find_one({'_id': ObjectId(movie_id)})
+    print(movie)
+    updated_movie = {
+        'title': request.form.get('title'),
+        'description': request.form.get('description'),
+        'link': request.form.get('link').split(),
+        'image': request.form.get('description')
+    }
+    movies.update_one(
+        {'_id': ObjectId(movie_id)},
+        {'$set': updated_movie})
+    movie = movies.find_one({'_id': ObjectId(movie_id)})
+    print(movie)
+    # return f'{movie}'
+    return redirect(url_for('movies_show.html', movie=movie))
 
 @app.route('/storage', methods=['POST'])
 def form():
@@ -94,7 +112,6 @@ def login():
     """Takes user to regestration page"""
     form = LoginForm()
     if request.method == 'POST':
-        print("Hey in request method")
         if form.validate_on_submit():
             if users.find_one({"email": form.email.data}):
                 if (form.email.data == users.find_one({"email": form.email.data})["email"]) and (form.password.data == users.find_one({"email": form.email.data})["password"]):
@@ -109,7 +126,7 @@ def login():
     if request.method == 'GET':
         return render_template('login.html', form=form)
 
-@app.route('/movies/<movie_id>/edit')
+@app.route('/movies/<movie_id>/edit', methods = ['GET', 'POST'])
 def playlists_edit(movie_id):
     """Show the edit form for a movie."""
     movie = movies.find_one({'_id': ObjectId(movie_id)})

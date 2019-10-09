@@ -2,7 +2,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form method='POST' action='/movies/<movie_id>'>
+<form method='POST' action='/movies/{{ movie._id }}'>
     <fieldset>
         <legend>Edit Movie Name</legend>
         <!-- TITLE -->
