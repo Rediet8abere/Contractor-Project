@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<a href='/'>Back to Home</a>
 <div class="content-section">
     <form method='POST' action=''>
         {{ form.hidden_tag() }}
@@ -49,6 +50,5 @@
             Need An Account?<a class="ml-2" href="{{ url_for('register')}}"> Sign Up </a>
         <small>
     </div>
-
 </div>
 {% endblock %}

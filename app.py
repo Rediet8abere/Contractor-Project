@@ -8,16 +8,17 @@ client = MongoClient()
 db = client.MoviesF
 movies = db.movies
 users = db.users
+
 movie = [
 { 'title': 'aladdin', 'description':'Aladdin 2019 Full Movie Subtitle Indonesia aladin 2019 sub indonesia',
-    'realse_date': 'May 19, 2019', 'time': '1:27:39', 'link':"https://www.youtube.com/embed/jYMP6WUlYoo",
+    'link':"https://www.youtube.com/embed/jYMP6WUlYoo",
     'image':"https://cdn3-www.comingsoon.net/assets/uploads/2019/07/Aladdin.jpg"},
 { 'title': 'Alvin and the Chipmunks 3', 'description':'Alvin and the Chipmunks 3 Full Movie English - Alvin Movies For Kid 2017',
-     'realse_date': 'Nov 30, 2017', 'time': '1:16:20', 'link':"https://www.youtube.com/embed/Dbln5lECx2o",
+      'link':"https://www.youtube.com/embed/Dbln5lECx2o",
       'image':"https://images-na.ssl-images-amazon.com/images/I/91isIKhEZBL._SX342_.jpg"},
 { 'title': 'Sophie & Sheba', 'description':'A seventeen-year-old girl, is forced to sell Sheba the elephant to a traveling\
         circus in order to afford the tuition for her ballet school.',
-     'realse_date': 'Feb 5, 2016', 'time': '1:43:23', 'link':"https://www.youtube.com/embed/4un5gHqzbqI",
+      'link':"https://www.youtube.com/embed/4un5gHqzbqI",
      'image':"https://m.media-amazon.com/images/M/MV5BMjE5NDU1NTIzOV5BMl5BanBnXkFtZTcwMTU2MTEzOA@@._V1_.jpg"}
 ]
 
@@ -42,7 +43,6 @@ class user(object):
             'email': self.email
             }
 
-
 @app.route('/')
 def index():
     """Return homepage."""
@@ -57,17 +57,14 @@ def movies_index():
 def playlists_show(movie_id):
     """Show a single movie."""
     movie = movies.find_one({'_id': ObjectId(movie_id)})
-    # return f'movie id {movie_id} /n {movie}'
     return render_template('movies_show.html', movie=movie)
 
-@app.route('/forms', methods=['POST'])
+@app.route('/storage', methods=['POST'])
 def form():
     """create a new form."""
     if request.method == "POST":
         data = request.form.to_dict()
         return f' Hello World! {request.form.to_dict()} Hello World!'
-
-    # return redirect(url_for('playlists_index'))
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
@@ -95,16 +92,13 @@ def login():
     """Takes user to regestration page"""
     form = LoginForm()
     if request.method == 'POST':
-        print("getting ready to check")
         if form.validate_on_submit():
-            print("valid for submit")
             if users.find_one({"email": form.email.data}):
                 if (form.email.data == users.find_one({"email": form.email.data})["email"]) and (form.password.data == users.find_one({"email": form.email.data})["password"]):
                     print("email valid")
                     flash(f'You have been logged in!', 'success')
-                    return redirect(url_for('index'))
+                    return redirect(url_for('movies_index'))
             else:
-                print("wrong email")
                 flash(f'Log in unsuccessful. Please Check password and email', 'danger')
                 # return redirect(url_for('index'))
     return render_template('login.html', form=form)
@@ -112,11 +106,9 @@ def login():
     if request.method == 'GET':
         return render_template('login.html', form=form)
 
-    # form = LoginForm()
-    # if form.validate_on_submit():
-    #     if form.email.data == 'red@gmail.com' and form.password.data == 'password':
-    #         flash(f'You have been logged in!', 'success')
-    #         return redirect(url_for('index'))
-    #     else:
-    #         flash(f'Log in unsuccessful. Please Check password and user name', 'danger')
-    # return render_template('login.html', form=form)
+@app.route('/movies/<movie_id>/edit')
+def playlists_edit(movie_id):
+    """Show the edit form for a movie."""
+    movie = movies.find_one({'_id': ObjectId(movie_id)})
+    # return f'Hello World! {movie} Hello World!'
+    return render_template('movies_edit.html', movie=movie)

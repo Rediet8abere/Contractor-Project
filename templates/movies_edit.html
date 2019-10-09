@@ -1,0 +1,40 @@
+<!-- templates/users_edit.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<form method='POST' action='/movies/<movie_id>'>
+    <fieldset>
+        <legend>Edit MOvie Name</legend>
+        <!-- TITLE -->
+        <p>
+            <label for='movie-title'>Title</label><br>
+            <input id='movie-title' type='text' name='title' value='{{ movie.title }}'/>
+        </p>
+
+        <!-- DESCRIPTION -->
+        <p>
+            <label for='description'>Description</label><br>
+            <input id='description' type='text' name='description' value='{{ movie.description }}' />
+        </p>
+
+        <!-- VIDEO LINKS -->
+        <p>
+            <label for='movies'>Movies</label><br>
+            <p>Add videos in the form of 'https://youtube.com/embed/KEY'. Separate with a newline.</p>
+            <textarea id='movies' name='link' rows='10'>{{ "\n".join(movie.link) }}</textarea>
+        </p>
+
+        <p>
+            <label for='image'>Image</label><br>
+            <input id='image' type='text' name='image' value='{{ movie.image }}' />
+        </p>
+
+
+    </fieldset>
+
+    <!-- BUTTON -->
+    <p>
+        <button type='submit'>Save Movie</button>
+    </p>
+</form>
+{% endblock %}
