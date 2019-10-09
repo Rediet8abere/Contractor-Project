@@ -47,49 +47,9 @@ def index():
     """Return homepage."""
     return render_template('home.html')
 
-@app.route('/movies')
-def movies_index():
-    """Show all movies."""
-    return render_template('movies_index.html', movies=movies.find())
-
-
-
-@app.route('/movies/<movie_id>')
-def playlists_show(movie_id):
-    """Show a single movie."""
-    movie = movies.find_one({'_id': ObjectId(movie_id)})
-    return render_template('movies_show.html', movie=movie)
-
-@app.route('/movies/<movie_id>', methods=['POST'])
-def movies_update(movie_id):
-    """Submit an edited movie."""
-    movie = movies.find_one({'_id': ObjectId(movie_id)})
-    print(movie)
-    updated_movie = {
-        'title': request.form.get('title'),
-        'description': request.form.get('description'),
-        'link': request.form.get('link').split(),
-        'image': request.form.get('description')
-    }
-    movies.update_one(
-        {'_id': ObjectId(movie_id)},
-        {'$set': updated_movie})
-    movie = movies.find_one({'_id': ObjectId(movie_id)})
-    print(movie)
-    # return f'{movie}'
-    return redirect(url_for('movies_show.html', movie=movie))
-
-@app.route('/storage', methods=['POST'])
-def form():
-    """create a new form."""
-    if request.method == "POST":
-        data = request.form.to_dict()
-        return f' Hello World! {request.form.to_dict()} Hello World!'
-
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
     """Takes user to regestration page"""
-    # client sends flask a POST request (clients sends over data)
     if request.method == 'POST':
         form = RegistrationForm()
         if form.validate_on_submit():
@@ -115,23 +75,50 @@ def login():
         if form.validate_on_submit():
             if users.find_one({"email": form.email.data}):
                 if (form.email.data == users.find_one({"email": form.email.data})["email"]) and (form.password.data == users.find_one({"email": form.email.data})["password"]):
-                    print("email valid")
-                    flash(f'You have been logged in!', 'success')
                     return redirect(url_for('movies_index'))
             else:
                 flash(f'Log in unsuccessful. Please Check password and email', 'danger')
-                # return redirect(url_for('index'))
     return render_template('login.html', form=form)
 
     if request.method == 'GET':
         return render_template('login.html', form=form)
 
+@app.route('/movies')
+def movies_index():
+    """Show all movies."""
+    return render_template('movies_index.html', movies=movies.find())
+
+@app.route('/movies/<movie_id>')
+def movies_show(movie_id):
+    """Show a single movie."""
+    movie = movies.find_one({'_id': ObjectId(movie_id)})
+    return render_template('movies_show.html', movie=movie)
+
 @app.route('/movies/<movie_id>/edit', methods = ['GET', 'POST'])
-def playlists_edit(movie_id):
+def movies_edit(movie_id):
     """Show the edit form for a movie."""
     movie = movies.find_one({'_id': ObjectId(movie_id)})
-    # return f'Hello World! {movie} Hello World!'
     return render_template('movies_edit.html', movie=movie)
+
+@app.route('/movies/<movie_id>', methods=['POST'])
+def movies_update(movie_id):
+    """Submit an edited movie."""
+    updated_movie = {
+        'title': request.form.get('title'),
+        'description': request.form.get('description'),
+        'link': request.form.get('link').split(),
+        'image': request.form.get('image')
+    }
+    movies.update_one(
+        {'_id': ObjectId(movie_id)},
+        {'$set': updated_movie})
+    return redirect(url_for('movies_show', movie_id=movie_id))
+
+@app.route('/movies/<movie_id>/delete', methods=['POST'])
+def movies_delete(movie_id):
+    """Delete one movie."""
+    movies.delete_one({'_id': ObjectId(movie_id)})
+    return redirect(url_for('movies_index'))
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=os.environ.get('PORT', 5000))
