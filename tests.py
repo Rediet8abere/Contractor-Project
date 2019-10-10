@@ -3,20 +3,19 @@ from app import app
 from bson.objectid import ObjectId
 
 
-sample_playlist_id = ObjectId('5d55cffc4a3d4031f42827a3')
-sample_playlist = {
+sample_movie_id = ObjectId('5d55cffc4a3d4031f42827a3')
+sample_movie = {
     'title': 'aladdin',
     'description':'Aladdin 2019 Full Movie Subtitle Indonesia aladin 2019 sub indonesia',
-    'realse_date': 'May 19, 2019',
     'link':"https://www.youtube.com/embed/jYMP6WUlYoo",
     'image':"https://cdn3-www.comingsoon.net/assets/uploads/2019/07/Aladdin.jpg"
 
 }
 sample_form_data = {
-    'title': sample_playlist['title'],
-    'description': sample_playlist['description'],
-    'videos': '\n'.join(sample_playlist['link']),
-    'image': '\n'.join(sample_playlist['image'])
+    'title': sample_movie['title'],
+    'description': sample_movie['description'],
+    'link': '\n'.join(sample_movie['link']),
+    'image': (sample_movie['image'])
 }
 
 class MoviesTests(TestCase):
@@ -35,16 +34,29 @@ class MoviesTests(TestCase):
         """Test the movies homepage."""
         result = self.client.get('/')
         self.assertEqual(result.status, '200 OK')
-        self.assertIn(b'MOVIES:))!!', result.data)
 
     @mock.patch('pymongo.collection.Collection.find_one')
-    def test_show_playlist(self, mock_find):
-        """Test showing a single playlist."""
-        mock_find.return_value = sample_playlist
+    def test_show_movie(self, mock_find):
+        """Test showing a single movie."""
+        mock_find.return_value = sample_movie
 
-        result = self.client.get(f'/movies/{sample_playlist_id}')
+        result = self.client.get(f'/movies/{sample_movie_id}')
         self.assertEqual(result.status, '200 OK')
-        self.assertIn(b'aladdin', result.data)
+
+    @mock.patch('pymongo.collection.Collection.find_one')
+    def test_edit_movie(self, mock_find):
+        """Test editing a single movie."""
+        mock_find.return_value = sample_movie
+
+        result = self.client.get(f'/movies/{sample_movie_id}/edit')
+        self.assertEqual(result.status, '200 OK')
+
+    @mock.patch('pymongo.collection.Collection.update_one')
+    def test_update_movie(self, mock_update):
+        result = self.client.post(f'/movies/{sample_movie_id}', data=sample_form_data)
+
+        self.assertEqual(result.status, '302 FOUND')
+        # mock_update.assert_called_with({'_id': sample_movie_id}, {'$set': sample_movie})
 
 if __name__ == '__main__':
     unittest_main()

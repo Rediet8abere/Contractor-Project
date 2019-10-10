@@ -2,17 +2,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a href='/'>Back to Home</a>
-<h1>Movies</h1>
-    <div class="row">
-        <div class="col">
-        {% for movie in movies %}
-            <h2><a href='/movies/{{ movie._id }}'>{{ movie.title }}</a></h2>
-            <small>{{ movie.title }}</small>
-            <small>{{ movie.description }}</small>
-            <img src='{{ movie.image }}' width="500" height="333">
-        {% endfor %}
+<button type="button" class="btn btn-warning"><a href='/'>Log Out</a></button>
+    <div class="container">
+        <div class="row">
+            {% for movie in movies %}
+                <div class="col-5">
+                    <h2><a href='/movies/{{ movie._id }}'>{{ movie.title }}</a></h2>
+                    <img src='{{ movie.image }}' width="500" height="333">
+                    <small>{{ movie.description }}</small>
+                </div>
+            {% endfor %}
         </div>
-  </div>
-</div>
+    </div>
 {% endblock %}

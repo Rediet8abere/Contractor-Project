@@ -18,7 +18,16 @@ movie = [
 { 'title': 'Sophie & Sheba', 'description':'A seventeen-year-old girl, is forced to sell Sheba the elephant to a traveling\
         circus in order to afford the tuition for her ballet school.',
       'link':"https://www.youtube.com/embed/4un5gHqzbqI",
-     'image':"https://m.media-amazon.com/images/M/MV5BMjE5NDU1NTIzOV5BMl5BanBnXkFtZTcwMTU2MTEzOA@@._V1_.jpg"}
+     'image':"https://m.media-amazon.com/images/M/MV5BMjE5NDU1NTIzOV5BMl5BanBnXkFtZTcwMTU2MTEzOA@@._V1_.jpg"},
+
+{ 'title': 'Minions', 'description':'Minions Full Movie in English Compilation - Animation Movies - New Disney Cartoon 2019',
+      'link':"https://www.youtube.com/embed/VO4F0FrSmzs",
+     'image':"https://www.ft.com/__origami/service/image/v2/images/raw/https%3A%2F%2Fs3-ap-northeast-1.amazonaws.com%2Fpsh-ex-ftnikkei-3937bb4%2Fimages%2F9%2F1%2F8%2F0%2F3020819-2-eng-GB%2F1019N-USJ-Minions.jpg?source=nar-cms"},
+{ 'title': 'Tom & Jerry', 'description':'LOONEY TUNES BIGGEST COMPILATION: Bugs Bunny, Daffy Duck and more!',
+      'link':"https://www.youtube.com/embed/OM6xvpzqCUA",
+     'image':"https://upload.wikimedia.org/wikipedia/en/5/5f/TomandJerryTitleCardc.jpg"},
+
+
 ]
 
 movies.remove( { } )
