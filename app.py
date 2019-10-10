@@ -106,7 +106,7 @@ def movies_update(movie_id):
     updated_movie = {
         'title': request.form.get('title'),
         'description': request.form.get('description'),
-        'link': request.form.get('link').split(),
+        # 'link': request.form.get('link').split(),
         'image': request.form.get('image')
     }
     movies.update_one(
