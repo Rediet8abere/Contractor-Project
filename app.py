@@ -114,9 +114,7 @@ def movies_update(movie_id):
     """Submit an edited movie."""
     updated_movie = {
         'title': request.form.get('title'),
-        'description': request.form.get('description'),
-        # 'link': request.form.get('link').split(),
-        'image': request.form.get('image')
+        'description': request.form.get('description')
     }
     movies.update_one(
         {'_id': ObjectId(movie_id)},

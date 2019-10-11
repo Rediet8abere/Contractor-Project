@@ -11,6 +11,12 @@ sample_movie = {
     'image':"https://cdn3-www.comingsoon.net/assets/uploads/2019/07/Aladdin.jpg"
 
 }
+
+sample_movie_update = {
+    'title': 'aladdin',
+    'description':'Aladdin 2019 Full Movie Subtitle Indonesia aladin 2019 sub indonesia'
+}
+
 sample_form_data = {
     'title': sample_movie['title'],
     'description': sample_movie['description'],
@@ -35,6 +41,21 @@ class MoviesTests(TestCase):
         result = self.client.get('/')
         self.assertEqual(result.status, '200 OK')
 
+    def test_register(self):
+        """Test the regestration page."""
+        result = self.client.get('/register')
+        self.assertEqual(result.status, '200 OK')
+
+    def test_login(self):
+        """Test the regestration page."""
+        result = self.client.get('/login')
+        self.assertEqual(result.status, '200 OK')
+
+    def movies_index(self):
+        """Test the regestration page."""
+        result = self.client.get('/movies')
+        self.assertEqual(result.status, '200 OK')
+
     @mock.patch('pymongo.collection.Collection.find_one')
     def test_show_movie(self, mock_find):
         """Test showing a single movie."""
@@ -56,7 +77,21 @@ class MoviesTests(TestCase):
         result = self.client.post(f'/movies/{sample_movie_id}', data=sample_form_data)
 
         self.assertEqual(result.status, '302 FOUND')
-        # mock_update.assert_called_with({'_id': sample_movie_id}, {'$set': sample_movie})
+        mock_update.assert_called_with({'_id': sample_movie_id}, {'$set': sample_movie_update})
 
+    @mock.patch('pymongo.collection.Collection.find_one')
+    def test_delete_movie(self, mock_find):
+        """Test deleting a single movie."""
+        mock_find.return_value = sample_movie
+        result = self.client.get('/movies')
+        self.assertEqual(result.status, '200 OK')
+
+    # @mock.patch('pymongo.collection.Collection.find_one')
+    # def test_edit_delete(self, mock_find):
+    #     """Test deleting a single movie."""
+    #     mock_find.return_value = sample_movie
+    #     result = self.client.get(f'/movies/{sample_movie_id}/delete')
+    #     self.assertEqual(result.status, '200 OK')
+# /movies/<movie_id>/delete
 if __name__ == '__main__':
     unittest_main()
